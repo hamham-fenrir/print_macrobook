@@ -1,0 +1,3 @@
+[submodule "resources_yaml"]
+	path = resources_yaml
+	url = git@github.com.hamham:hamham-fenrir/resources_yaml.git
