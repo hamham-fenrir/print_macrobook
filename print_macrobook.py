@@ -51,7 +51,7 @@ def load_all_titles_from_directory(directory):
                     name = raw.split(b'\x00', 1)[0].decode('ascii', errors='ignore')
                     titles.append(name)
         except Exception as e:
-            print(f"Error loding title file '{ttl_file}' : {e}")
+            print(f"Error loading title file '{ttl_file}' : {e}")
     return titles
 
 # Macro decoding
