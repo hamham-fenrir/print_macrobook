@@ -132,7 +132,7 @@ def main():
 
     auto_trans = load_json_database(args.auto_trans)
     items = load_json_database(args.items)
-    titles = load_all_titles_from_directory(args.directory)
+    group_names = load_all_titles_from_directory(args.directory)
 
     all_macros = []
     for filepath in sorted(glob.glob(os.path.join(args.directory, 'mcr*.dat')),
@@ -144,10 +144,28 @@ def main():
 
     grouped = []
     for idx, i in enumerate(range(0, len(all_macros), CHUNK_SIZE), start=1):
+        chunk = all_macros[i:i + CHUNK_SIZE]
+        palettes = []
+
+        for p_idx, j in enumerate(range(0, len(chunk), 20), start=1):
+            macros = []
+            for m_idx, macro in enumerate(chunk[j:j + 20], start=1):
+                macros.append({
+                    "index": m_idx,
+                    "title": macro["title"],
+                    "lines": macro["lines"]
+                })
+            palettes.append({
+                "index": p_idx,
+                "macros": macros
+            })
+
+        name = group_names[idx - 1] if idx - 1 < len(group_names) else f"Group {idx}"
+
         grouped.append({
             "index": idx,
-            "name": titles[idx - 1] if idx - 1 < len(titles) else f"Group {idx}",
-            "macros": all_macros[i:i + CHUNK_SIZE]
+            "name": name,
+            "palettes": palettes
         })
 
     jst = ZoneInfo("Asia/Tokyo")
