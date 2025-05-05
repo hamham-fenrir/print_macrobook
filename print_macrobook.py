@@ -13,8 +13,6 @@ MACRO_LINE_COUNT = 6
 MACRO_TITLE_SIZE = 8
 OFFSET_SIZE = 6
 MACRO_BLOCK_SIZE = MACRO_LINE_SIZE * MACRO_LINE_COUNT + MACRO_TITLE_SIZE + OFFSET_SIZE
-MACRO_BLOCK_COUNT = 20
-CHUNK_SIZE = 200
 
 # Utility functions
 def load_json_database(filepath):
@@ -134,17 +132,28 @@ def main():
     items = load_json_database(args.items)
     group_names = load_all_titles_from_directory(args.directory)
 
-    all_macros = []
-    for filepath in sorted(glob.glob(os.path.join(args.directory, 'mcr*.dat')),
-                           key=extract_number):
-        all_macros.extend([
+    # グループごとのマクロ格納用
+    grouped_dict = {}
+
+    # mcr*.dat の処理
+    dat_files = sorted(glob.glob(os.path.join(args.directory, 'mcr*.dat')),
+                       key=extract_number)
+    for filepath in dat_files:
+        num = extract_number(filepath)
+        print(num)
+        group_index = num // 10
+        print(group_index)
+        if group_index not in grouped_dict:
+            grouped_dict[group_index] = []
+        grouped_dict[group_index].extend([
             {"title": m["title"], "lines": m["lines"]}
             for m in parse_binary_file(filepath, auto_trans, items)
         ])
 
+    # 整形して出力
     grouped = []
-    for idx, i in enumerate(range(0, len(all_macros), CHUNK_SIZE), start=1):
-        chunk = all_macros[i:i + CHUNK_SIZE]
+    for idx, group_index in enumerate(sorted(grouped_dict.keys()), start=1):
+        chunk = grouped_dict[group_index]
         palettes = []
 
         for p_idx, j in enumerate(range(0, len(chunk), 20), start=1):
@@ -160,7 +169,7 @@ def main():
                 "macros": macros
             })
 
-        name = group_names[idx - 1] if idx - 1 < len(group_names) else f"Group {idx}"
+        name = group_names[group_index] if group_index < len(group_names) else f"Group {group_index + 1}"
 
         grouped.append({
             "index": idx,
