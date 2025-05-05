@@ -2,9 +2,21 @@
 
 [https://hamham-fenrir.github.io/macroweb/](https://hamham-fenrir.github.io/macroweb/)のためのマクロブックをYAML化するスクリプト
 
-## ファイルフォーマット
+## mcrX.ttl: ファイルフォーマット
 
-mcrX.dat ファイルが装備セット用のファイルです。
+mcrX.ttl ファイルがマクロブックのタイトル用ファイルです。
+
+* 先頭24バイト(ヘッダ?)
+* 以下、マクロブック20個分
+    * 16バイト: マクロブックのタイトル
+
+24 + (16 * 20) = 344 バイト
+
+現状 `mcr.ttl` と `mcr_2.ttl` の2ファイルで計40ブック分になります。
+
+## mcrX.dat: ファイルフォーマット
+
+mcrX.dat ファイルがマクロパレット用のファイルです。
 
 ![](_images/mcrX_dat.png)
 
