@@ -140,9 +140,7 @@ def main():
                        key=extract_number)
     for filepath in dat_files:
         num = extract_number(filepath)
-        print(num)
         group_index = num // 10
-        print(group_index)
         if group_index not in grouped_dict:
             grouped_dict[group_index] = []
         grouped_dict[group_index].extend([
